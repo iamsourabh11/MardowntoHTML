@@ -10,7 +10,6 @@ Hello my name is Aakash, lets try this sentence.
 
 this parser is workingg, lets type a continuous line  
 and see if this thing works
-
 [**this is url**](https://www.google.com)
 
 # _heading 1_
@@ -26,10 +25,6 @@ and see if this thing works
 ###### heading 6
 
 THis is an image ![IMAGE text](https://www.iitd.ac.in)
-
-![another image](tmp/sdf/sdfsdfd.jpg)
-
-------------
 
 Ordered list
 

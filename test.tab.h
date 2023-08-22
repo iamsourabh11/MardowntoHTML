@@ -39,7 +39,7 @@
 # define YY_YY_TEST_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -75,17 +75,18 @@ extern int yydebug;
     ULS2 = 276,                    /* ULS2  */
     ULS3 = 277,                    /* ULS3  */
     SPACE = 278,                   /* SPACE  */
-    DOT = 279,                     /* DOT  */
-    LSQRB = 280,                   /* LSQRB  */
-    RSQRB = 281,                   /* RSQRB  */
-    LB = 282,                      /* LB  */
-    RB = 283,                      /* RB  */
-    EXCLAIM = 284,                 /* EXCLAIM  */
-    NEWLINE = 285,                 /* NEWLINE  */
-    PIPE = 286,                    /* PIPE  */
-    TABLE_SEPERATOR = 287,         /* TABLE_SEPERATOR  */
-    NUM = 288,                     /* NUM  */
-    TEXT = 289                     /* TEXT  */
+    URL = 279,                     /* URL  */
+    IMAGE = 280,                   /* IMAGE  */
+    OLS = 281,                     /* OLS  */
+    LSQRB = 282,                   /* LSQRB  */
+    RSQRB = 283,                   /* RSQRB  */
+    LB = 284,                      /* LB  */
+    RB = 285,                      /* RB  */
+    EXCLAIM = 286,                 /* EXCLAIM  */
+    NEWLINE = 287,                 /* NEWLINE  */
+    PIPE = 288,                    /* PIPE  */
+    TABLE_SEPERATOR = 289,         /* TABLE_SEPERATOR  */
+    TEXT = 290                     /* TEXT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -94,11 +95,11 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 25 "test.y"
+#line 31 "test.y"
 
     char* str;
 
-#line 102 "test.tab.h"
+#line 103 "test.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

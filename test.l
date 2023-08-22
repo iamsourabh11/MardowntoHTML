@@ -4,95 +4,96 @@
 #include <string.h>
 #include "test.tab.h"
 
+extern int yyval;
+
 
 %}
 
 %option noyywrap
 
-num                         [0-9]+
+num                         [0-9]
 alpha                       [a-zA-Z]
 alphanum                    [a-zA-Z0-9]
 space                       [ ]
-punc                        [@$%^&;"',\\<>\/?`~\.]
-bold1                       (\_\_)
+punc                        [@$%^&;"',\\<>\/?`~]
+bold1                       (__)
 bold2                       (\*\*)
 italics1                    (\_)
 italics2                    (\*)
-bolditalics1                (\_\_\_)
-bolditalics2_open           (\_\_\*)
-bolditalics3_open           (\*\*\_)
-bolditalics2_close          (\*_\_)
-bolditalics3_close          (\_\*\*)
-strikethrough               (\~\~)
-nwl                         (\n)
-uls1                        (-)
-uls2                        (\+)
-uls3                        (\*)    
+bolditalics1                (___)
+bolditalics2_open           (__\*)
+bolditalics3_open           (\*\*_)
+bolditalics2_close          (\*__)
+bolditalics3_close          (_\*\*)
 
-sep1                        (\|--\|)
-sep2                        (--\|)*
+uls1                        (\-{space})
+uls2                        (\+{space})
+uls3                        (\*{space})   
+olst                        ({num}\.{space})
+sep1                        (\|\-\-\|)
+sep2                        (\-\-\|)*
+
+text                         ({alpha}|{punc}|\.|\#{7,}|{space}|{space}{2}\n)*
+
 
 
 paragraph                   (\n\n)
-text                        ({ALPHANUM}|{PUNC}|{SPACE})*{space}{space}{nwl}
 
-softline                     ((  )\n)
+softline                     ({space}{space}\n)
+url                          (http)(s?:)(\/\/[a-zA-Z\-\.]+\.[a-zA-Z]+)
+image                        ([a-zA-Z0-9\/]+\.[a-zA-Z]+)
 
 
 
 
 %%
-(#{space})                      {return HEADING1;}
-(##{space})                     {return HEADING2;}
-(###{space})                    {return HEADING3;}
-(####{space})                   {return HEADING4;}
-(#####{space})                  {return HEADING5;}
-(######{space})                 {return HEADING6;}
+^"# "                          {return HEADING1;}
+^"## "                         {return HEADING2;}
+^"### "                        {return HEADING3;}
+^"#### "                       {return HEADING4;}
+^"##### "                      {return HEADING5;}
+^"###### "                    {return HEADING6;}
 
-text                            {return TEXT;}
+{space}                           {return SPACE;}
 
+{softline}                        {return LINEBREAK;}
 
-paragraph                       {return PARAGRAPH;}
+{uls2}                            {return ULS2;}
 
-softline                        {return LINEBREAK;}
-
-bold1                           {return BOLD1;}
-bold2                           {return BOLD2;}
-italics1                        {return ITALICS1;}
-italics2                        {return ITALICS2;}
-bolditalics1                    {return BOLDITALICS1;}
-bolditalics2_open               {return BOLDITALICS2_OPEN;}
-bolditalics3_open               {return BOLDITALICS3_OPEN;}
-bolditalics2_close              {return BOLDITALICS2_CLOSE;}
-bolditalics3_close              {return BOLDITALICS3_CLOSE;}
-
-uls1{space}                     {return ULS1;}
-uls2{space}                     {return ULS2;}
-uls3{space}                     {return ULS3;}
-
-
-num                             {return NUM;}
-(\.)                            {return DOT;}
-space                           {return SPACE;}
-
-
-"|"                             {return PIPE;}
-
-{sep1}{sep2}                    {return TABLE_SEPERATOR;}
+{text}                            {return TEXT;}
+{paragraph}                       {return PARAGRAPH;}
 
 
 
-"["			                    {return LSQRB;}
-"]"			                    {return RSQRB;}
-"("			                    {return LB;}
-")"			                    {return RB;}
-"!"                             {return EXCLAIM;}
-nwl                             {return NEWLINE;}
+{bold1}                           {return BOLD1;}
+{bold2}                           {return BOLD2;}
+{italics1}                        {return ITALICS1;}
+{italics2}                        {return ITALICS2;}
+{bolditalics1}                    {return BOLDITALICS1;}
+{bolditalics2_open}               {return BOLDITALICS2_OPEN;}
+{bolditalics3_open}               {return BOLDITALICS3_OPEN;}
+{bolditalics2_close}              {return BOLDITALICS2_CLOSE;}
+{bolditalics3_close}              {return BOLDITALICS3_CLOSE;}
+
+{uls1}                            {return ULS1;}
+
+{uls3}                            {return ULS3;}
+{olst}                             {return OLS;}
 
 
 
-[. | #{7,}{space}]                {return yytext[0];}
 
+{url}                             {return URL;}
+{image}                             {return IMAGE;}
+
+
+
+"["			                      {return LSQRB;}
+"]"			                      {return RSQRB;}
+"("			                      {return LB;}
+")"			                      {return RB;}
+"!"                               {return EXCLAIM;}
+(\n)                               {return NEWLINE;}
 
 
 %%
