@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "test.tab.h"
+void fun(char *s);
+
 
 extern int yyval;
 
@@ -11,11 +13,11 @@ extern int yyval;
 
 %option noyywrap
 
-num                         [0-9]
+num                         [0-9]+
 alpha                       [a-zA-Z]
 alphanum                    [a-zA-Z0-9]
 space                       [ ]
-punc                        [@$%^&;"',\\<>\/?`~]
+punc                        [@$%^&;"',\\<>\/?`\-!]
 bold1                       (__)
 bold2                       (\*\*)
 italics1                    (\_)
@@ -26,76 +28,62 @@ bolditalics3_open           (\*\*_)
 bolditalics2_close          (\*__)
 bolditalics3_close          (_\*\*)
 
-uls1                        (\-{space})
-uls2                        (\+{space})
-uls3                        (\*{space})   
-olst                        ({num}\.{space})
-sep1                        (\|\-\-\|)
-sep2                        (\-\-\|)*
+uls1                        ^\-{space}
+uls2                        ^\+{space}
+uls3                        ^\*{space}   
+olst                        ^{num}\.{space}
+sep1                        (\|{space}([\-]{2,}){space}\|)
+sep2                        ({space}([\-]{2,}){space}\|)*
 
-text                         ({alpha}|{punc}|\.|\#{7,}|{space}|{space}{2}\n)*
+float                       ({num}(\.)?{num})
+text                        ({alpha}|[\#]{7,}|[\'\"\.\?])({alphanum}|{punc}|\.|[\#]{1,})*
+floattext                   ({text}|{float})
+line                        {floattext}({space}{floattext})*
 
-
-
-paragraph                   (\n\n)
-
-softline                     ({space}{space}\n)
-url                          (http)(s?:)(\/\/[a-zA-Z\-\.]+\.[a-zA-Z]+)
-image                        ([a-zA-Z0-9\/]+\.[a-zA-Z]+)
+url                         https?:\/\/{text}\/?
 
 
 
 
 %%
-^"# "                          {return HEADING1;}
-^"## "                         {return HEADING2;}
-^"### "                        {return HEADING3;}
-^"#### "                       {return HEADING4;}
-^"##### "                      {return HEADING5;}
-^"###### "                    {return HEADING6;}
-
-{space}                           {return SPACE;}
-
-{softline}                        {return LINEBREAK;}
-
-{uls2}                            {return ULS2;}
-
-{text}                            {return TEXT;}
-{paragraph}                       {return PARAGRAPH;}
-
-
-
-{bold1}                           {return BOLD1;}
-{bold2}                           {return BOLD2;}
-{italics1}                        {return ITALICS1;}
-{italics2}                        {return ITALICS2;}
-{bolditalics1}                    {return BOLDITALICS1;}
-{bolditalics2_open}               {return BOLDITALICS2_OPEN;}
-{bolditalics3_open}               {return BOLDITALICS3_OPEN;}
-{bolditalics2_close}              {return BOLDITALICS2_CLOSE;}
-{bolditalics3_close}              {return BOLDITALICS3_CLOSE;}
-
-{uls1}                            {return ULS1;}
-
-{uls3}                            {return ULS3;}
-{olst}                             {return OLS;}
-
-
-
-
-{url}                             {return URL;}
-{image}                             {return IMAGE;}
-
-
-
-"["			                      {return LSQRB;}
-"]"			                      {return RSQRB;}
-"("			                      {return LB;}
-")"			                      {return RB;}
-"!"                               {return EXCLAIM;}
-(\n)                               {return NEWLINE;}
+^#{space}                    {return HEADING1;}
+^##{space}                   {return HEADING2;}
+^###{space}                  {return HEADING3;}
+^####{space}                 {return HEADING4;}
+^#####{space}                {return HEADING5;}
+^######{space}               {return HEADING6;}
+{space}                      {return SPACE;}
+{uls2}                       {return ULS2;}
+{line}                       {yylval.str = strdup(yytext); return TEXT;}
+"~~"                         {return  STRIKETHROUGH;}
+^"\-"{3,}                    {return HORIZONTAL;}
+{bold1}                      {return BOLD1;}
+{bold2}                      {return BOLD2;}
+{italics1}                   {return ITALICS1;}
+{italics2}                   {return ITALICS2;}
+{bolditalics1}               {return BOLDITALICS1;}
+{bolditalics2_open}          {return BOLDITALICS2_OPEN;}
+{bolditalics3_open}          {return BOLDITALICS3_OPEN;}
+{bolditalics2_close}         {return BOLDITALICS2_CLOSE;}
+{bolditalics3_close}         {return BOLDITALICS3_CLOSE;}
+{uls1}                       {return ULS1;}
+{uls3}                       {return ULS3;}
+{olst}                       {return OLS;}
+{sep1}{sep2}                 {return SEPERATOR;}
+{url}                        {yylval.str = strdup(yytext); return URL;}
+"|"                          {return PIPE;}
+"["			                 {return LSQRB;}
+"]"			                 {return RSQRB;}
+"("			                 {return LB;}
+")"			                 {return RB;}
+"!["                         {return EXCLAIM;}
+\n                           {return NEWLINE;}
 
 
 %%
+
+void fun(char *s){
+    printf("%s: %s \n", s, yytext);
+}
 
 
