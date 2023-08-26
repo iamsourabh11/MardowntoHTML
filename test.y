@@ -176,8 +176,8 @@ types:  URL     {$$=$1;}
 tableblock: {signal();mutex();printf("</p>");} PIPE {signal();mutex();printf("</p>");tableflag=0;} {printf("<table><tr>");} firstrow SEPERATOR NEWLINE tablebody  {printf("</table><p>");} 
     ;
 
-firstrow:  SPACE textblock SPACE PIPE {printf("<th>%s</th>",$2);} firstrow
-    |      SPACE textblock SPACE PIPE {printf("<th>%s</th></tr>",$2);} NEWLINE
+firstrow:  extraspace textblock extraspace PIPE {printf("<th>%s</th>",$2);} firstrow
+    |      extraspace textblock extraspace PIPE {printf("<th>%s</th></tr>",$2);} NEWLINE
     ;
 
 
@@ -185,8 +185,8 @@ tablebody:  PIPE {printf("<tr>");} body
     |       %empty
     ;
 
-body:   SPACE  textblock SPACE  PIPE {printf("<td>%s</td>",$2);} body 
-    |   SPACE  textblock SPACE  PIPE {printf("<td>%s</td>",$2);} NEWLINE {printf("</tr>");} tablebody {tableflag=1;}
+body:   extraspace  textblock extraspace  PIPE {printf("<td>%s</td>",$2);} body 
+    |   extraspace  textblock extraspace  PIPE {printf("<td>%s</td>",$2);} NEWLINE {printf("</tr>");} tablebody {tableflag=1;}
     ;
 
 strikethroughblock : STRIKETHROUGH {printf("<del> ");} block  {printf(" </del>");} STRIKETHROUGH 
@@ -201,9 +201,10 @@ textblock: {paraflag=1;} TEXT  { if(linkflag!=0 && tableflag!=0) printf("%s",$2)
          ;
 
 
+extraspace: SPACE extraspace
+          | %empty
 
-
-
+; 
 
 
 
