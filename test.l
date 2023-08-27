@@ -35,8 +35,8 @@ uls1                        ^\-{space}
 uls2                        ^\+{space}
 uls3                        ^\*{space}   
 olst                        ^{num}\.{space}
-sep1                        (\|{space}([\-]{2,}){space}\|)
-sep2                        ({space}([\-]{2,}){space}\|)*
+sep1                        (\|{space}:?([\-]{2,}):?{space}\|)
+sep2                        ({space}([\-]{2,}):?{space}\|)*
 float                       ({num}(\.)?{num})
 text                        ({alpha}|[\#]{7,}|[\'\"\.\?])({alphanum}|{punc}|\.|[\#]{1,})*  
 floattext                   ({text}|{float})
